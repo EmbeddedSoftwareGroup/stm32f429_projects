@@ -35,7 +35,10 @@
 #include <sys/time.h>
 #include <sys/times.h>
 
-extern int __io_putchar(int ch);
+#include "stm32f4xx_hal.h"
+#include "usart.h"
+
+//extern int __io_putchar(int ch);
 
 /* Variables */
 #undef errno
@@ -56,6 +59,14 @@ int _getpid(void)
 {
 	return 1;
 }
+
+
+int __io_putchar(int ch)
+{
+	 HAL_UART_Transmit(&huart1,(uint8_t *) &ch,1,0xFFFF);
+	 return ch;
+}
+
 
 int _kill(int pid, int sig)
 {

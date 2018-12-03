@@ -43,67 +43,10 @@
 #include "gpio.h"
 #include "stdio.h"
 
-#if 0 // working 2 with nano & std newlib
-#include  <errno.h>
-#include  <sys/unistd.h> // STDOUT_FILENO, STDERR_FILENO
-
-int _write(int file, char *data, int len)
-{
-   if ((file != STDOUT_FILENO) && (file != STDERR_FILENO))
-   {
-      errno = EBADF;
-      return -1;
-   }
-
-   // arbitrary timeout 1000
-   HAL_StatusTypeDef status =
-      HAL_UART_Transmit(&huart1, (uint8_t*)data, len, 1000);
-
-   // return # of bytes written - as best we can tell
-   return (status == HAL_OK ? len : 0);
-}
-#endif
-
-#if 0 // working 1
-#include <stdio.h>
-#include <stdarg.h>
-#include <string.h>
-
-void vprint(const char *fmt, va_list argp)
-{
-    char string[200];
-    if(0 < vsprintf(string,fmt,argp)) // build string
-    {
-        HAL_UART_Transmit(&huart1, (uint8_t*)string, strlen(string), 0xffffff); // send message via UART
-    }
-}
-
-void my_printf(const char *fmt, ...) // custom printf() function
-{
-    va_list argp;
-    va_start(argp, fmt);
-    vprint(fmt, argp);
-    va_end(argp);
-}
-#endif
-#if 0
-/* USER CODE BEGIN Includes */
-
-
-#ifdef __GNUC__
-  /* With GCC/RAISONANCE, small printf (option LD Linker->Libraries->Small printf
-     set to 'Yes') calls __io_putchar() */
-  #define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
-#else
-  #define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
-#endif /* __GNUC__ */
-#endif
-
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
-uint8_t TxBuff[13] ="Hello World\n";
-uint8_t RxBuff[13];
+
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
 
@@ -118,16 +61,9 @@ void SystemClock_Config(void);
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
-#if 1
 
-// have to include syscalls.c file for the below fucntion to get executed.
-// dragged the syscalls.c file on to the user folder..since all files are not linked..
-int __io_putchar(int ch)
-{
-	 HAL_UART_Transmit(&huart1,(uint8_t *) &ch,1,0xFFFF);
-	 return ch;
-}
-#endif
+
+
 /* USER CODE END 0 */
 
 /**
@@ -175,9 +111,7 @@ int main(void)
 #if 0 // working 1
 	  my_printf("Printf Implemented");
 #endif
- //     HAL_UART_Transmit(&huart1,TxBuff,sizeof(TxBuff),100);
-	  HAL_GPIO_TogglePin(GPIOG,GPIO_PIN_13);
-//	  HAL_Delay(1000);
+ 	  HAL_GPIO_TogglePin(GPIOG,GPIO_PIN_13);
   /* USER CODE BEGIN 3 */
 
   }
