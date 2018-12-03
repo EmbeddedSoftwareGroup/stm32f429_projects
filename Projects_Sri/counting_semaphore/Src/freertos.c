@@ -197,7 +197,7 @@ void StartTask03(void const * argument)
   for(;;)
   {
 	  uint8_t i = 0;
-	  osDelay(10000);
+	  osDelay(5000);
 
 	i = osSemaphoreGetCount(myCountingSem01Handle);
 
