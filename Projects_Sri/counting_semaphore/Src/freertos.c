@@ -199,7 +199,7 @@ void StartTask03(void const * argument)
   for(;;)
   {
 	  int i = 0;
-	  osDelay(10000);
+	  osDelay(5000);
 
 	  if(myCountingSem01Handle != NULL)
 		  xSemaphoreTake(myCountingSem01Handle,10);
