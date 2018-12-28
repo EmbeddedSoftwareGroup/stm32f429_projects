@@ -110,9 +110,10 @@ void MX_FREERTOS_Init(void) {
 
   /* Create the semaphores(s) */
   /* definition and creation of myCountingSem01 */
-  osSemaphoreDef(myCountingSem01);
-  myCountingSem01Handle = osSemaphoreCreate(osSemaphore(myCountingSem01), 10);
+//  osSemaphoreDef(myCountingSem01);
+ // myCountingSem01Handle = osSemaphoreCreate(osSemaphore(myCountingSem01), 10);
 
+  myCountingSem01Handle = xSemaphoreCreateCounting(30,0);
   /* USER CODE BEGIN RTOS_SEMAPHORES */
   /* add semaphores, ... */
 
@@ -159,7 +160,7 @@ void StartDefaultTask(void const * argument)
   for(;;)
   {
     osDelay(100);
-    osSemaphoreRelease(myCountingSem01Handle);
+ //   osSemaphoreRelease(myCountingSem01Handle);
   }
   /* USER CODE END StartDefaultTask */
 }
@@ -177,8 +178,9 @@ void StartTask02(void const * argument)
   /* Infinite loop */
   for(;;)
   {
-	  osDelay(100);
-	  osSemaphoreWait(myCountingSem01Handle,osWaitForever);
+	  osDelay(500);
+	  if(myCountingSem01Handle != NULL)
+		  xSemaphoreGive(myCountingSem01Handle);
   }
   /* USER CODE END StartTask02 */
 }
@@ -196,17 +198,19 @@ void StartTask03(void const * argument)
   /* Infinite loop */
   for(;;)
   {
-	  uint8_t i = 0;
-	  osDelay(5000);
+	  int i = 0;
+	  osDelay(10000);
 
-	i = osSemaphoreGetCount(myCountingSem01Handle);
+	  if(myCountingSem01Handle != NULL)
+		  xSemaphoreTake(myCountingSem01Handle,10);
 
-	while(i)
-	{
-		HAL_GPIO_TogglePin(GPIOG, GPIO_PIN_13);
-		osDelay(1000);
-		i--;
-	}
+	  i = uxSemaphoreGetCount(myCountingSem01Handle);
+		while(i)
+		{
+			HAL_GPIO_TogglePin(GPIOG, GPIO_PIN_13);
+			osDelay(1000);
+			i--;
+		}
   }
   /* USER CODE END StartTask03 */
 }
